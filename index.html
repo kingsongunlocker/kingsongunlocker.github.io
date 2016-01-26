@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<!-- saved from url=(0034)http://ezbe.underkround.fi/ks.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="utf-8">
+<title>King Song Code calculator</title>
+
+</head><body><form id="codeform">
+	ISN:<input type="text" name="isn" onkeydown="if(event.keyCode == 13){calculate(this.form)}"> <br>	
+	<input type="button" value="Calculate" onclick="calculate(this.form)"><br>
+	CODE:<input type="text" name="code">
+</form>
+
+
+
+<script type="text/javascript">
+function calculate(form)
+{
+	var isnVal, i, code, codeVal, codeTemp;
+	
+	try
+	{
+		form.isn.value = form.isn.value.trim();
+		if(form != null && form.isn != null)
+		{
+			isnVal = form.isn.value.split(":");
+			if(isnVal.length == 1)
+			{
+				//No colons, split by 2 characters
+				if(form.isn.value.length != 12)
+				{
+					alert('ISN-value must have 12 characters, either separated by colons or all one after another without anything in between (like 64:1E:84:C3:D6:D4 or 641E84C3D6D4)');
+					return;
+				}
+				
+				isnVal = [];
+				for(i = 0; i < 6; i++)
+				{
+					isnVal[i] = form.isn.value.slice(i*2, i*2+2);
+				}
+			}
+			
+			if(isnVal.length != 6)
+			{
+				alert('Failed to parse entered ISN, check your input');
+			}
+			
+			code = [];
+            code[1] = 0;
+            code[3] = 0;
+            
+            code[0] = 255 - parseInt(isnVal[0], 16);
+            code[2] = 255 - parseInt(isnVal[1], 16);
+            code[4] = 255 - parseInt(isnVal[2], 16);
+            //Calculate checksum from other values
+            code[5] = ((code[0] + code[1] + code[2] + code[3] + code[4]) & 0xFF);
+            
+            codeVal = "";
+			for(i = 0; i < 6; i++)	
+			{
+				codeTemp = code[i].toString(16);
+				if(codeTemp.length < 2)
+				{
+					codeTemp = "0" + codeTemp;
+				}
+				codeVal += codeTemp;
+				if(i < 5)
+				{
+					codeVal += ":";
+				}
+			}
+            
+            form.code.value = codeVal;
+		}
+		else
+		{
+			alert('Input ISN');
+		}
+	}
+	catch(ex)
+	{
+		alert('Exception caught: ' + ex);
+	}	
+};
+</script></body></html>
