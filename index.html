@@ -1,83 +1,90 @@
+<!--
+    Web version released under the WTFPL by Esaj from forum.electricunicycle.org
+    Original Java version by Jonathan Vasquez (fearedbliss) <jvasquez1011@gmail.com>
+-->
+
 <!DOCTYPE html>
-<!-- saved from url=(0034)http://ezbe.underkround.fi/ks.html -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="utf-8">
-<title>King Song Code calculator</title>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-</head><body><form id="codeform">
-	ISN:<input type="text" name="isn" onkeydown="if(event.keyCode == 13){calculate(this.form)}"> <br>	
-	<input type="button" value="Calculate" onclick="calculate(this.form)"><br>
-	CODE:<input type="text" name="code">
-</form>
+        <title>King Song v4 Key Generator</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/generator.css" rel="stylesheet">
+    </head>
 
-
+<body>
+    <div class="generator">
+        <h3>King Song v4 Key Generator</h3>
+        <label for="isn" class="sr-only">ISN</label>
+        <input type="text" id="isn" class="form-control" placeholder="11:22:33:44:55:66" required autofocus>
+        <label for="answer" class="sr-only">Answer</label>
+        <input type="text" id="answer" class="form-control" placeholder="Unlock Code" readonly>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="calculate()">Unlock</button>
+        <center><a href="https://github.com/fearedbliss/KingSongISNKeyGenerator" class="btn btn-link">Java Version of Key Generator</a></center>
+    </div>
 
 <script type="text/javascript">
-function calculate(form)
+function calculate()
 {
-	var isnVal, i, code, codeVal, codeTemp;
-	
-	try
-	{
-		form.isn.value = form.isn.value.trim();
-		if(form != null && form.isn != null)
-		{
-			isnVal = form.isn.value.split(":");
-			if(isnVal.length == 1)
-			{
-				//No colons, split by 2 characters
-				if(form.isn.value.length != 12)
-				{
-					alert('ISN-value must have 12 characters, either separated by colons or all one after another without anything in between (like 64:1E:84:C3:D6:D4 or 641E84C3D6D4)');
-					return;
-				}
-				
-				isnVal = [];
-				for(i = 0; i < 6; i++)
-				{
-					isnVal[i] = form.isn.value.slice(i*2, i*2+2);
-				}
-			}
-			
-			if(isnVal.length != 6)
-			{
-				alert('Failed to parse entered ISN, check your input');
-			}
-			
-			code = [];
-            code[1] = 0;
-            code[3] = 0;
-            
-            code[0] = 255 - parseInt(isnVal[0], 16);
-            code[2] = 255 - parseInt(isnVal[1], 16);
-            code[4] = 255 - parseInt(isnVal[2], 16);
-            //Calculate checksum from other values
-            code[5] = ((code[0] + code[1] + code[2] + code[3] + code[4]) & 0xFF);
-            
-            codeVal = "";
-			for(i = 0; i < 6; i++)	
-			{
-				codeTemp = code[i].toString(16);
-				if(codeTemp.length < 2)
-				{
-					codeTemp = "0" + codeTemp;
-				}
-				codeVal += codeTemp;
-				if(i < 5)
-				{
-					codeVal += ":";
-				}
-			}
-            
-            form.code.value = codeVal;
-		}
-		else
-		{
-			alert('Input ISN');
-		}
-	}
-	catch(ex)
-	{
-		alert('Exception caught: ' + ex);
-	}	
+    var isnVal;
+    var i;
+    var code;
+    var codeVal;
+    var codeTemp;
+    var isn = document.getElementById("isn").value.trim();
+
+    try
+    {
+        isnVal = isn.split(":");
+
+        if (isnVal.length == 1) {
+            //No colons, split by 2 characters
+            if (isn.length != 12) {
+                throw false;
+            }
+
+            isnVal = [];
+            for (i = 0; i < 6; i++) {
+                isnVal[i] = isn.slice(i*2, i*2+2);
+            }
+        }
+
+        if(isnVal.length != 6) {
+            throw false;
+        }
+
+        code = [];
+        code[1] = 0;
+        code[3] = 0;
+
+        code[0] = 255 - parseInt(isnVal[0], 16);
+        code[2] = 255 - parseInt(isnVal[2], 16);
+        code[4] = 255 - parseInt(isnVal[4], 16);
+
+        //Calculate checksum from other values
+        code[5] = ((code[0] + code[1] + code[2] + code[3] + code[4]) & 0xFF);
+
+        codeVal = "";
+        for(i = 0; i < 6; i++) {
+            codeTemp = code[i].toString(16);
+            if(codeTemp.length < 2) {
+                codeTemp = "0" + codeTemp;
+            }
+            codeVal += codeTemp;
+            if(i < 5) {
+                codeVal += ":";
+            }
+        }
+
+        document.getElementById("answer").value = codeVal.toUpperCase();
+    }
+    catch (ex) {
+        document.getElementById("answer").value = "There was an error processing your ISN.";
+    }
 };
-</script></body></html>
+</script>
+</body>
+</html>
