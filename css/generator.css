@@ -4,6 +4,12 @@ body {
   background-color: #eee;
 }
 
+.info {
+    max-width: 336px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
 .generator {
   max-width: 336px;
   padding: 15px;

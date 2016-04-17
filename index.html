@@ -17,15 +17,22 @@
     </head>
 
 <body>
-    <div>
-        Hello world!
+    <div class="info">
+        <p>
+            This form allows you to generate a valid unlock code for your King Song electric unicycle.
+            For issues and discussion see its origin thread <a href="http://forum.electricunicycle.org/topic/2608-ks-isn-code-calculator-web-version/">here</a>.
+        </p>
+        <p>
+            If you already know your ISN, enter it directly in the second input field.
+            Otherwise you'll need the Bluetooth MAC address of your wheel: enter this in the first input field and it will calculate your ISN and unlock code for you.
+        </p>
     </div>
     <div class="generator">
         <h3>King Song v4 Key Generator</h3>
         <label for="mac" class="sr-only">Bluetooth MAC</label>
         <input type="text" id="mac" class="form-control" placeholder="11:22:33:44:55:66" required autofocus>
         <label for="isn" class="sr-only">ISN</label>
-        <input type="text" id="isn" class="form-control" placeholder="11:22:33:44:55:66" required>
+        <input type="text" id="isn" class="form-control" placeholder="66:55:44:33:22:11" required>
         <label for="answer" class="sr-only">Answer</label>
         <input type="text" id="answer" class="form-control" placeholder="Unlock Code" readonly>
         <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="execute()">Unlock</button>
