@@ -1,23 +1,39 @@
 // method executed on submit
 function execute() {
-    // work on mac
+    // define input
     var macVal = element("mac").value.trim();
-    if (isValidFormat(macVal)) {
-        var isn = calculateIsn(macVal);
-        element("isn").value = isn;
-    } else {
-        // nothing as isnVal could have been directly entered
-    }
-    // work on isn to get unlock code
     var isnVal = element("isn").value.trim();
-    if (isValidFormat(isnVal))  {
-        var unlock = calculateUnlock(isnVal);
-        element("answer").value = unlock.toUpperCase();
-    }
-    // if this validation fails, we can't execute, so display error
-    else {
-        printError("Either Bluetooth MAC or ISN must be valid!");
+
+    // clear error is both are empty
+    if (!isSet(macVal) && !isSet(isnVal)) {
+        printError("Please specify Bluetooth MAC or ISN!");
         return;
+    }
+
+    // if mac has been given use that over any given isn value
+    if (isSet(macVal)) {
+        console.log("MAC given");
+        // in case of error make sure that mac is seen as error
+        element("isn").value = "";
+        // if not valid input, warn
+        if (!isValidFormat(macVal)) {
+            printError("Invalid Bluetooth MAC given!");
+            return;
+        }
+        // calculate isn value from mac
+        isnVal = calculateIsn(macVal);
+        // update output
+        element("isn").value = isnVal;
+    }
+    // isnVal is now set either from init OR calculateIsn
+    if (isSet(isnVal)) {
+        console.log("ISN given");
+        if (!isValidFormat(isnVal)) {
+            printError("Invalid ISN given!");
+            return;
+        }
+        // calculate unlock code
+        element("answer").value = calculateUnlock(isnVal);
     }
 }
 
@@ -26,14 +42,16 @@ function element(name) {
     return document.getElementById(name);
 }
 
-// helper function that checks validity of input
+// helper function that checks validity of input with regex
 function isValidFormat(value) {
-    if (value == undefined || value == "") {
-        return false;
-    }
-    // regex which matches 5 groups of 'digit digit :' and one final 'digit digit'
-    var reg = new RegExp("^([0-9]{2}:){5}([0-9]{2})$");
+    // regex which matches mac / isn format with and without colon
+    var reg = new RegExp("^(([0-9a-fA-F]{2})(:|)){5}([0-9a-fA-F]{2})$");
     return reg.test(value);
+}
+
+// helper function that checks that value has been set
+function isSet(value) {
+    return value != undefined && value != "";
 }
 
 // given the mac will calculate the isn
@@ -43,7 +61,22 @@ function calculateIsn(mac) {
 }
 
 // given the isn will calculate the unlock code
-function calculateUnlock(isn) {
+function calculateUnlock(isnVal) {
+
+    // create isn array
+    var isn = isnVal.split(":");
+    // this can happen if colon was left away
+    if (isn.length == 1) {
+        isn = [];
+        for (i = 0; i < 6; i++) {
+            isn[i] = isnVal.slice(i*2, i*2+2);
+        }
+    }
+    // shouldn't happen, but... :P
+    if(isn.length != 6) {
+        return "Script error! Invalid paramter for calculateUnlock!";
+    }
+
     var code = [];
     code[1] = 0;
     code[3] = 0;
@@ -66,7 +99,7 @@ function calculateUnlock(isn) {
             codeVal += ":";
         }
     }
-    return codeVal;
+    return codeVal.toUpperCase();
 }
 
 // unified error text
