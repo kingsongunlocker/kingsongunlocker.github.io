@@ -18,22 +18,26 @@
 
 <body>
     <div class="info">
+        <h3>King Song Unlocker</h3>
         <p>
             This form allows you to generate a valid unlock code for your King Song electric unicycle.
             For issues and discussion see its origin thread <a href="http://forum.electricunicycle.org/topic/2608-ks-isn-code-calculator-web-version/">here</a>.
         </p>
         <p>
             If you already know your ISN, enter it directly in the second input field.
-            Otherwise you'll need the Bluetooth MAC address of your wheel: enter this in the first input field and it will calculate your ISN and unlock code for you.
+            Otherwise you'll need the Bluetooth MAC address of your wheel: enter this in the first input field and it will calculate both your ISN and the unlock code for you.
+        </p>
+        <p class="text-muted small">
+            If it doesn't work or you encounter an issue, post a message in the <a href="http://forum.electricunicycle.org/topic/2608-ks-isn-code-calculator-web-version/">thread</a> or open an issue on <a href="https://github.com/kingsongunlocker/kingsongunlocker.github.io/issues">Github</a>.
         </p>
     </div>
     <div class="generator">
-        <h3>King Song v4 Key Generator</h3>
-        <label for="mac" class="sr-only">Bluetooth MAC</label>
+        <label for="mac">Bluetooth MAC</label>
         <input type="text" id="mac" class="form-control" placeholder="11:22:33:44:55:66" required autofocus>
-        <label for="isn" class="sr-only">ISN</label>
+        <label for="isn">ISN Value</label>
+        <p class="text-warning">Note: any given value will be overriden if a MAC is specified!</p>
         <input type="text" id="isn" class="form-control" placeholder="66:55:44:33:22:11" required>
-        <label for="answer" class="sr-only">Answer</label>
+        <label for="answer">Unlock Code</label>
         <input type="text" id="answer" class="form-control" placeholder="Unlock Code" readonly>
         <button class="btn btn-lg btn-primary btn-block" type="submit" onclick="execute()">Unlock</button>
         <center><a href="https://github.com/fearedbliss/KingSongISNKeyGenerator" class="btn btn-link">Java Version of Key Generator</a></center>
