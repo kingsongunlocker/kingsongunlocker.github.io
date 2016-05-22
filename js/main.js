@@ -20,9 +20,11 @@ function execute() {
             printError("Invalid Bluetooth MAC given!");
             return;
         }
+        // format
+        macVal = format(macVal);
+        element("mac").value = macVal;
         // calculate isn value from mac
         isnVal = calculateIsn(macVal);
-        // update output
         element("isn").value = isnVal;
     }
     // isnVal is now set either from init OR calculateIsn
@@ -35,6 +37,20 @@ function execute() {
         // calculate unlock code
         element("answer").value = calculateUnlock(isnVal);
     }
+}
+
+// ensures that all format is of 11:22:33:44:55:66 format.
+function format(value) {
+    // create isn array
+    var splitValue = value.split(":");
+    // this can happen if colon was left away
+    if (splitValue.length == 1) {
+        splitValue = [];
+        for (i = 0; i < 6; i++) {
+            splitValue[i] = value.slice(i*2, i*2+2);
+        }
+    }
+    return splitValue.join(':');
 }
 
 // helper to select an html element
@@ -63,15 +79,7 @@ function calculateIsn(mac) {
 // given the isn will calculate the unlock code
 function calculateUnlock(isnVal) {
 
-    // create isn array
-    var isn = isnVal.split(":");
-    // this can happen if colon was left away
-    if (isn.length == 1) {
-        isn = [];
-        for (i = 0; i < 6; i++) {
-            isn[i] = isnVal.slice(i*2, i*2+2);
-        }
-    }
+    var isn = isnVal.split(':');
     // shouldn't happen, but... :P
     if(isn.length != 6) {
         return "Script error! Invalid paramter for calculateUnlock!";
